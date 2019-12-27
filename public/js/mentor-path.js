@@ -1,8 +1,8 @@
 json_sample = '{"name" : "first", "content" : "hello", "childrens" : [{"name" : "two-one", "content" : "world", "childrens":[]}, {"name" : "two-two", "content" : "univers", "childrens":[]} ]}'
 var myjs = JSON.parse(json_sample);
-console.log(myjs.name)
-console.log(myjs.childrens)
-console.log(myjs.childrens[myjs.childrens.length-1])
+// console.log(myjs.name)
+// console.log(myjs.childrens)
+// console.log(myjs.childrens[myjs.childrens.length-1])
 
 var paper = Snap(800,1000);
 // var t1 = paper.line(50, 50, 100, 100);
@@ -15,19 +15,35 @@ var paper = Snap(800,1000);
 // var bigCircle = paper.circle(150, 150, 100);
 // var t1 = paper.text(50, 50, ["snap", "hello miami", "yoyo", "beach"]);
 
-var rect_test = paper.rect(10, 10, 100, 50);
-var rect_test_2 = paper.rect(10, 100, 100, 50);
-paper.path("M60 60L60 100").attr({
-                            stroke: "red",
-                            strokeWidth: 10
-                        })
+
+function unparse(obj, level=0, index=0){
+
+    console.log("level is "+level)
+    if(obj) {
+        console.log(obj)
+        paper.text(50+200*index, 50+50*level, obj.name + " " + obj.content)
+        ++level
+        for(sub_obj_index in obj.childrens) {
+            unparse(obj.childrens[sub_obj_index], level, sub_obj_index)
+        }
+    }
+};
+
+unparse(myjs);
+
+// var rect_test = paper.rect(10, 10, 100, 50);
+// var rect_test_2 = paper.rect(10, 100, 100, 50);
+// paper.path("M60 60L60 100").attr({
+//                             stroke: "red",
+//                             strokeWidth: 10
+//                         })
 
 var x;
 var y;
 var pressed = false;
 
 
-rect_test.drag();
+// rect_test.drag();
 
 // function mouse_pessed(event) {
 //     pressed = true;
