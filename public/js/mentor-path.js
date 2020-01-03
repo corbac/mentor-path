@@ -15,6 +15,13 @@ var paper = Snap(800,1000);
 // var bigCircle = paper.circle(150, 150, 100);
 // var t1 = paper.text(50, 50, ["snap", "hello miami", "yoyo", "beach"]);
 
+function createbox(paper){
+    var box = paper.rect(0, 0, 200, 100).attr({stroke: '#123456', 'strokeWidth': 5, 'fill': '#FFFFFF'});
+    var text = paper.text(15,15, "Hello Folk")
+    return paper.g(box, text)
+}
+
+createbox(paper).transform('t50,50');
 
 function unparse(obj, level=0, index=0){
 
@@ -29,9 +36,9 @@ function unparse(obj, level=0, index=0){
     }
 };
 
-unparse(myjs);
+// unparse(myjs);
 
-// var rect_test = paper.rect(10, 10, 100, 50);
+
 // var rect_test_2 = paper.rect(10, 100, 100, 50);
 // paper.path("M60 60L60 100").attr({
 //                             stroke: "red",
