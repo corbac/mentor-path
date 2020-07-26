@@ -47,8 +47,8 @@ var start = function() {
 
 function createbox(paper, id){
     var box = paper.rect(0, 0, 200, 100).attr({stroke: '#123456', 'strokeWidth': 5, 'fill': '#FFFFFF'});
-    var text = paper.text(15,15, "Hello Folk")
-    var group = paper.g(box, text)
+    // var text = paper.text(15,15, "Hello Folk")
+    var group = paper.g(box)//, text)
     group.attr({id : id})
     return group.drag(  move,
                         start,
@@ -246,10 +246,11 @@ function createtext(localpoint, svg) {
     // console.log(g)
     let box
     g.forEach(x => {
+        console.log(localpoint)
         // console.log(x[0].attr('width'))
         // console.log(in_box(localpoint, x))
         if (in_box(localpoint, x) && !x.select('.foreign')){
-            
+            console.log('detecté quand meme'+ x)
             var myforeign = document.createElementNS('http://www.w3.org/2000/svg', 'foreignObject')
             var textdiv = document.createElement("div");
             var textnode = document.createTextNode("Add Card Description");
@@ -262,7 +263,8 @@ function createtext(localpoint, svg) {
             myforeign.setAttribute("height", "100");
             myforeign.classList.add("foreign"); //to make div fit text
             textdiv.classList.add("insideforeign"); //to make div fit text
-            textdiv.addEventListener("mousedown", elementMousedown, false);
+            // textdiv.addEventListener("mousedown", elementMousedown, false);
+
             // myforeign.setAttributeNS(null, "transform", "translate(" + localpoint.x + " " + localpoint.y + ")");
             // svg.appendChild(myforeign);
             // textdiv.setAttribute("display", "block");
@@ -270,6 +272,21 @@ function createtext(localpoint, svg) {
             // textdiv.setAttribute("padding", "5");
             myforeign.appendChild(textdiv);
             x.append(myforeign)
+        }
+
+        if (in_box(localpoint, x)){
+            // console.log(document.querySelector('#'+x.attr('id')+' .foreign div'))
+            var element = document.querySelector('#'+x.attr('id')+' .foreign div')
+            // var element = x.select('.foreign div');
+            // console.log(element)
+            element.focus()
+            // element.addEventListener('change', (event) => {
+            //     console.log('yeaaah!')
+            //     this.contentEditable = "false"
+            // });
+
+            // var event = new Event('change');
+            // element.dispatchEvent(event);
         }
     });
 };
@@ -282,11 +299,12 @@ function elementMousedown(evt) {
 $(('#thesvg')).click(function (evt) {
     var svg = document.getElementById('thesvg');
     var localpoint = getlocalmousecoord(svg, evt);
-    if (!mousedownonelement) {
+    // if (!mousedownonelement) {
+        console.log('invoked')
         createtext(localpoint, svg);
-    } else {
-        mousedownonelement = false;
-    }
+    // } else {
+    //     mousedownonelement = false;
+    // }
 });
 
 
@@ -329,4 +347,13 @@ var pressed = false;
 // $(document).mouseup(mouse_unpessed);
 // $(document).mousedown(mouse_pessed);
 // $(document).mousemove(mouse_moving);
+
+
+/// DESING JSON OF APP
+
+{
+    'autor' : {},
+    
+
+}
 

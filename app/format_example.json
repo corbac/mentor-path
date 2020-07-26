@@ -1,0 +1,21 @@
+{
+    "autor" : {},
+    "cases" : [
+            {
+                "title" : "TitleTest",
+                "config" : {
+                    "x" : 50,
+                    "y" : 75,
+                    "width" : 200,
+                    "height" : 100,
+                    "type" : "m"
+                },
+                "children" : [
+                    {},
+                    {}
+                ]
+            },
+            {}
+        ]
+
+}
