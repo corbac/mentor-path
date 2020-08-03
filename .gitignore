@@ -1,0 +1,3 @@
+*.zip
+app/public/js/Snap
+service/node_modules
