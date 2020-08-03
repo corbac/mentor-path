@@ -254,40 +254,40 @@ var paper = Snap(800,1000);
 paper.attr({'id': 'thesvg'})
 
 
-// DEMO :
+// // DEMO :
 
-var carre1 = createbox(paper, 'carre1')
+// var carre1 = createbox(paper, 'carre1')
 
-var carre2 = createbox(paper).attr({id :'carre2'})
-var carre3 = createbox(paper).attr({id :'carre3'})
+// var carre2 = createbox(paper).attr({id :'carre2'})
+// var carre3 = createbox(paper).attr({id :'carre3'})
 
-carre1.transform('t50,50');
-carre2.transform('t270,120');
-carre3.transform('t300,320');
+// carre1.transform('t50,50');
+// carre2.transform('t270,120');
+// carre3.transform('t300,320');
 
-// carre2.attr({'height' : 100})
+// // carre2.attr({'height' : 100})
 
-let box_increment = 4
+// let box_increment = 4
 
-createJoinLine("carre1", "carre2")
-createJoinLine("carre1", "carre3")
-createJoinLine("carre2", "carre3")
+// createJoinLine("carre1", "carre2")
+// createJoinLine("carre1", "carre3")
+// createJoinLine("carre2", "carre3")
 
-carre2.mouseover(show_button_add_box)
-
-
-// paper.rect(50, 50, 100, 100).click(add_case("carre3"));
+// carre2.mouseover(show_button_add_box)
 
 
- //
+// // paper.rect(50, 50, 100, 100).click(add_case("carre3"));
 
-$(('#thesvg')).click(function (evt) {
-    var svg = document.getElementById('thesvg');
-    var localpoint = getlocalmousecoord(svg, evt);
-    // if (!mousedownonelement) {
-        console.log('invoked')
-        createtext(localpoint, svg);
-    // } else {
-    //     mousedownonelement = false;
-    // }
-});
+
+//  //
+
+// $(('#thesvg')).click(function (evt) {
+//     var svg = document.getElementById('thesvg');
+//     var localpoint = getlocalmousecoord(svg, evt);
+//     // if (!mousedownonelement) {
+//         console.log('invoked')
+//         createtext(localpoint, svg);
+//     // } else {
+//     //     mousedownonelement = false;
+//     // }
+// });
