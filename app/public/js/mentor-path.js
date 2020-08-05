@@ -29,7 +29,7 @@ class MentorPathBuilder {
         this.attr({
                     transform: this.data('origTransform') + (this.data('origTransform') ? "T" : "t") + [dx, dy]
                 });
-        updateJoiLine(this.attr('id'))
+        this.updateJoiLine(this.attr('id'))
     }
     start = function() {
         this.data('origTransform', this.transform().local );
