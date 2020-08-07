@@ -45,16 +45,40 @@ export class RoadmapBuilderComponent implements OnInit {
     this.createJoinLine("carre2", "carre3")
 
     carre2.mouseover((evt) => this.show_button_add_box(evt, carre2))
+    console.info(this.paper)
+
+    let context : RoadmapBuilderComponent = this 
+
+    this.paper.click(function (evt) {
+        var svg = document.getElementById('thesvg');
+        var localpoint = context.getlocalmousecoord(svg, evt);
+        // if (!mousedownonelement) {
+            console.log('invoked')
+            context.createtext(localpoint, svg);
+        // } else {
+        //     mousedownonelement = false;
+        // }
+    });
   }
 
-  move = function(dx,dy) {
-    this.attr({
-                transform: this.data('origTransform') + (this.data('origTransform') ? "T" : "t") + [dx, dy]
+  move = function(dx,dy, el, context) {
+
+    // console.info(el.data('origTransform'));
+    
+    
+    el.attr({
+                transform: el.data('origTransform') + (el.data('origTransform') ? "T" : "t") + [dx, dy]
             });
-    this.updateJoiLine(this.attr('id'))
+            
+    // console.info(dx, dy);
+    
+    context.updateJoiLine(el.attr('id'))
   }
-  start = function() {
-      this.data('origTransform', this.transform().local );
+  start = function(el) {
+    console.info('I\'m on the start Fucntion');
+    
+    console.info(el.transform())
+    el.data('origTransform', el.transform().local );
   }
 
   createbox(paper : any, id : string){
@@ -62,8 +86,9 @@ export class RoadmapBuilderComponent implements OnInit {
       // var text = this.paper.text(15,15, "Hello Folk")
       var group = this.paper.g(box)//, text)
       group.attr({id : id})
-      return group.drag(  this.move,
-                          this.start,
+      let context : RoadmapBuilderComponent = this 
+      return group.drag(  (dx,dy) => {this.move(dx, dy, group,  context)},
+                          this.start(group),
                           function(){
                             console.log("Move stopped");
                           }
@@ -123,8 +148,10 @@ export class RoadmapBuilderComponent implements OnInit {
               var obj1_info = obj1.getBoundingClientRect()
               var obj2_info = obj2.getBoundingClientRect()
 
-              console.log(path_obj[0] +' , '+ path_obj[1] +':'+(obj1_info.x, obj1_info.y, obj2_info.x, obj2_info.y))
-              console.log(Snap.angle(obj1_info.x, obj1_info.y, obj2_info.x, obj2_info.y))
+              // console.info(obj1_info)
+
+              // console.log(path_obj[0] +' , '+ path_obj[1] +':'+(obj1_info.x, obj1_info.y, obj2_info.x, obj2_info.y))
+              // console.log(Snap.angle(obj1_info.x, obj1_info.y, obj2_info.x, obj2_info.y))
 
               let ang = Snap.angle(obj1_info.x, obj1_info.y, obj2_info.x, obj2_info.y)
               let out = ""
@@ -224,7 +251,7 @@ export class RoadmapBuilderComponent implements OnInit {
       // console.log(g)
       let box
       g.forEach(x => {
-          console.log(localpoint)
+          // console.log(localpoint)
           // console.log(x[0].attr('width'))
           // console.log(in_box(localpoint, x))
           if (this.in_box(localpoint, x) && !x.select('.foreign')){
