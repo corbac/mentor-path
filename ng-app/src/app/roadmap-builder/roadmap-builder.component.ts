@@ -31,7 +31,7 @@ export class RoadmapBuilderComponent implements OnInit {
     console.log(this.height,this.width);
     this.paper = Snap(this.height,this.width);
     this.paper.attr({'id': 'thesvg'});
-    const c : any = this.paper.circle(50, 50, 100);
+    // const c : any = this.paper.circle(50, 50, 100);
 
     var carre1 : any = this.createbox(this.paper, 'carre1');
     var carre2 : any = this.createbox(this.paper, 'carre2');
@@ -96,17 +96,35 @@ export class RoadmapBuilderComponent implements OnInit {
   }
 
   createJoinLine(id_obj1, id_obj2){
-    var obj1 = document.getElementById(id_obj1);
-    // console.log(obj1)
-    var obj2 = document.getElementById(id_obj2);
 
-    var obj1_info = obj1.getBoundingClientRect()
-    var obj2_info = obj2.getBoundingClientRect()
+    console.info('-----------------------------');
+    console.info('##'+id_obj1+'--->'+id_obj2 +'###');
+
+    interface ObjInfo {
+      x : number,
+      y : number,
+      width : number,
+      height : number
+    }
+
+    var obj1 = this.paper.select('#'+id_obj1);
+    var obj2 = this.paper.select('#'+id_obj2);
+    var rect1 = obj1.select('rect')
+    var rect2 = obj2.select('rect')
+    var obj1_info : ObjInfo = {x : obj1.matrix.e , y : obj1.matrix.f, width : parseInt(rect1.attr('width'),10), height : parseInt(rect1.attr('height'),10) }
+    var obj2_info : ObjInfo = {x : obj2.matrix.e , y : obj2.matrix.f, width : parseInt(rect2.attr('width'),10), height : parseInt(rect2.attr('height'),10) }
+
+    console.info(obj1_info);
+    console.info(obj2_info);
+    
+    
 
     // console.log(path_obj[0] +' , '+ path_obj[1] +':'+(obj1_info.x, obj1_info.y, obj2_info.x, obj2_info.y))
     // console.log(Snap.angle(obj1_info.x, obj1_info.y, obj2_info.x, obj2_info.y))
 
     let ang = Snap.angle(obj1_info.x, obj1_info.y, obj2_info.x, obj2_info.y)
+    
+    
     let out = ""
     if (ang >= 140 && ang <= 220){
         out = "M"+(obj1_info.x+obj1_info.width)+" "+(obj1_info.y+obj1_info.height/2)
@@ -117,6 +135,7 @@ export class RoadmapBuilderComponent implements OnInit {
     }
 
     
+    
     out += "T"+(obj2_info.x)+" "+(obj1_info.y+20)+" "+(obj2_info.x+obj2_info.width/2)+" "+(obj2_info.y)
     // console.log(out)
     // console.log(obj1.getBoundingClientRect().width, obj1.getBoundingClientRect().x)
@@ -124,6 +143,8 @@ export class RoadmapBuilderComponent implements OnInit {
     //     stroke: "red",
     //     strokeWidth: 10
     // });
+
+    console.info('-----------------------------');
     var line_path = this.paper.path(out).attr({
                                     id : id_obj1+'-'+id_obj2,
                                     class : 'join-line',
@@ -142,34 +163,43 @@ export class RoadmapBuilderComponent implements OnInit {
           let path_obj = x.attr('id').split('-')
           // console.log(path_obj.indexOf(id) >= 0)
           if(path_obj.indexOf(id) >= 0){
-              var obj1 = document.getElementById(path_obj[0]);
-              var obj2 = document.getElementById(path_obj[1]);
+            interface ObjInfo {
+              x : number,
+              y : number,
+              width : number,
+              height : number
+            }
+            var obj1 = this.paper.select('#'+path_obj[0]);
+            var obj2 = this.paper.select('#'+path_obj[1]);
+            var rect1 = obj1.select('rect')
+            var rect2 = obj2.select('rect')
+            var obj1_info : ObjInfo = {x : obj1.matrix.e , y : obj1.matrix.f, width : parseInt(rect1.attr('width'),10), height : parseInt(rect1.attr('height'),10) }
+            var obj2_info : ObjInfo = {x : obj2.matrix.e , y : obj2.matrix.f, width : parseInt(rect2.attr('width'),10), height : parseInt(rect2.attr('height'),10) }
+      
 
-              var obj1_info = obj1.getBoundingClientRect()
-              var obj2_info = obj2.getBoundingClientRect()
+            // console.info(obj1_info)
 
-              // console.info(obj1_info)
+            // console.log(path_obj[0] +' , '+ path_obj[1] +':'+(obj1_info.x, obj1_info.y, obj2_info.x, obj2_info.y))
+            // console.log(Snap.angle(obj1_info.x, obj1_info.y, obj2_info.x, obj2_info.y))
 
-              // console.log(path_obj[0] +' , '+ path_obj[1] +':'+(obj1_info.x, obj1_info.y, obj2_info.x, obj2_info.y))
-              // console.log(Snap.angle(obj1_info.x, obj1_info.y, obj2_info.x, obj2_info.y))
+            let ang = Snap.angle(obj1_info.x, obj1_info.y, obj2_info.x, obj2_info.y)
+            
+            let out = ""
+            if (ang >= 140 && ang <= 220){
+                out = "M"+(obj1_info.x+obj1_info.width)+" "+(obj1_info.y+obj1_info.height/2)
+                out += "T"+(obj2_info.x)+" "+(obj1_info.y+obj1_info.height/2)+" "+(obj2_info.x+obj2_info.width/2)+" "+(obj2_info.y)
+            }else if (ang <= 40 || ang >= 310){
+                out = "M"+(obj1_info.x)+" "+(obj1_info.y+obj1_info.height/2)
+                out += "T"+(obj2_info.x+obj2_info.width)+" "+(obj1_info.y+((obj2_info.y-obj1_info.y)/3))+" "+(obj2_info.x+obj2_info.width/2)+" "+(obj2_info.y)
+            }else {
+                out = "M"+(obj1_info.x+obj1_info.width/2)+" "+(obj1_info.y+obj1_info.height)
+                out += "L"+(obj2_info.x+obj2_info.width/2)+" "+(obj2_info.y)
+            }
 
-              let ang = Snap.angle(obj1_info.x, obj1_info.y, obj2_info.x, obj2_info.y)
-              let out = ""
-              if (ang >= 140 && ang <= 220){
-                  out = "M"+(obj1_info.x+obj1_info.width)+" "+(obj1_info.y+obj1_info.height/2)
-                  out += "T"+(obj2_info.x)+" "+(obj1_info.y+obj1_info.height/2)+" "+(obj2_info.x+obj2_info.width/2)+" "+(obj2_info.y)
-              }else if (ang <= 40 || ang >= 310){
-                  out = "M"+(obj1_info.x)+" "+(obj1_info.y+obj1_info.height/2)
-                  out += "T"+(obj2_info.x+obj2_info.width)+" "+(obj1_info.y+((obj2_info.y-obj1_info.y)/3))+" "+(obj2_info.x+obj2_info.width/2)+" "+(obj2_info.y)
-              }else {
-                  out = "M"+(obj1_info.x+obj1_info.width/2)+" "+(obj1_info.y+obj1_info.height)
-                  out += "L"+(obj2_info.x+obj2_info.width/2)+" "+(obj2_info.y)
-              }
-
-              // var out = "M"+(obj1_info.x+obj1_info.width/2)+" "+(obj1_info.y+obj1_info.height)
-              // out += "T"+(obj2_info.x)+" "+(obj1_info.y+20)+" "+(obj2_info.x+obj2_info.width/2)+" "+(obj2_info.y)
-              // console.log(out)
-              x.attr({'d' : out})
+            // var out = "M"+(obj1_info.x+obj1_info.width/2)+" "+(obj1_info.y+obj1_info.height)
+            // out += "T"+(obj2_info.x)+" "+(obj1_info.y+20)+" "+(obj2_info.x+obj2_info.width/2)+" "+(obj2_info.y)
+            // console.log(out)
+            x.attr({'d' : out})
           }
       });
   }
