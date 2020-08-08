@@ -45,7 +45,7 @@ export class RoadmapBuilderComponent implements OnInit {
     this.createJoinLine("carre2", "carre3")
 
     carre2.mouseover((evt) => this.show_button_add_box(evt, carre2))
-    console.info(this.paper)
+    // console.info(this.paper)
 
     let context : RoadmapBuilderComponent = this 
 
@@ -76,8 +76,6 @@ export class RoadmapBuilderComponent implements OnInit {
   }
   start = function(el) {
     console.info('I\'m on the start Fucntion');
-    
-    console.info(el.transform())
     el.data('origTransform', el.transform().local );
   }
 
@@ -87,8 +85,10 @@ export class RoadmapBuilderComponent implements OnInit {
       var group = this.paper.g(box)//, text)
       group.attr({id : id})
       let context : RoadmapBuilderComponent = this 
+      
+      // group.data('origTransform', group.transform().local );
       return group.drag(  (dx,dy) => {this.move(dx, dy, group,  context)},
-                          this.start(group),
+                          () => {this.start(group)}, // why different from this.start(group)
                           function(){
                             console.log("Move stopped");
                           }
@@ -197,7 +197,7 @@ export class RoadmapBuilderComponent implements OnInit {
   }
   
   show_button_add_box(evt : any, el : any){
-    // console.log(this)
+    console.log(el)
     let x_t = el.matrix.e
     let y_t = el.matrix.f
     let id = el.node.id
