@@ -20,10 +20,14 @@ export class RoadmapBuilderComponent implements OnInit {
   
   box_increment : number = 4
 
+  test_json : string;
+
 
   constructor() {
-        this.height = 800;
-        this.width = 1000;
+    this.height = 800;
+    this.width = 1000;
+
+    this.test_json = "{\"author\":{\"id\":\"ec2831b65472967f42c143cc6b000df7\"},\"roadmap\":{\"title\":\"Step1\",\"config\":{\"x\":50,\"y\":75,\"width\":200,\"height\":100,\"size\":\"m\",\"type\":\"step\"},\"children\":[{\"title\":\"Learn1\",\"config\":{\"x\":50,\"y\":75,\"width\":200,\"height\":100,\"size\":\"m\",\"type\":\"case\"},\"children\":[{\"title\":\"Learn1_1\",\"config\":{\"x\":50,\"y\":75,\"width\":200,\"height\":100,\"size\":\"m\",\"type\":\"case\"},\"children\":[]}]},{\"title\":\"Learn2\",\"config\":{\"x\":50,\"y\":75,\"width\":200,\"height\":100,\"size\":\"m\",\"type\":\"case\"},\"children\":[]}]}}"
         
   }
  
@@ -59,6 +63,34 @@ export class RoadmapBuilderComponent implements OnInit {
         //     mousedownonelement = false;
         // }
     });
+
+    this.extract_roadmap(this.test_json)
+  }
+
+  extract_roadmap(roadmap : string){
+    let roadmapJson : JSON = JSON.parse(roadmap);
+    console.info(roadmapJson);
+
+    // Build First Step:
+    // this.createbox(this.paper,roadmapJson['roadmap']['title']);
+    this.extract_recursive(undefined, roadmapJson['roadmap'])
+
+  }
+
+  extract_recursive(parentId : string, children){
+    this.createbox(this.paper,children['title'], 't${children[\'config\'][\'x\']} ${children[\'config\'][\'y\']}');
+    if (parentId){
+      console.info(parentId,children['title']);
+      this.createJoinLine(parentId, children['title']);
+    }
+    
+
+    if (children['children'].length > 0){
+      children['children'].forEach(element => {
+        this.extract_recursive(children['title'], element)
+      });
+      
+    }
   }
 
   move = function(dx,dy, el, context) {
@@ -79,12 +111,16 @@ export class RoadmapBuilderComponent implements OnInit {
     el.data('origTransform', el.transform().local );
   }
 
-  createbox(paper : any, id : string){
+  createbox(paper : any, id : string, transform : string = undefined){
       var box = this.paper.rect(0, 0, 200, 100).attr({stroke: '#123456', 'strokeWidth': 5, 'fill': '#FFFFFF'});
       // var text = this.paper.text(15,15, "Hello Folk")
       var group = this.paper.g(box)//, text)
       group.attr({id : id})
       let context : RoadmapBuilderComponent = this 
+
+      if (transform){
+        group.transform(transform)
+      }
       
       // group.data('origTransform', group.transform().local );
       return group.drag(  (dx,dy) => {this.move(dx, dy, group,  context)},
@@ -97,8 +133,8 @@ export class RoadmapBuilderComponent implements OnInit {
 
   createJoinLine(id_obj1, id_obj2){
 
-    console.info('-----------------------------');
-    console.info('##'+id_obj1+'--->'+id_obj2 +'###');
+    // console.info('-----------------------------');
+    // console.info('##'+id_obj1+'--->'+id_obj2 +'###');
 
     interface ObjInfo {
       x : number,
@@ -114,8 +150,8 @@ export class RoadmapBuilderComponent implements OnInit {
     var obj1_info : ObjInfo = {x : obj1.matrix.e , y : obj1.matrix.f, width : parseInt(rect1.attr('width'),10), height : parseInt(rect1.attr('height'),10) }
     var obj2_info : ObjInfo = {x : obj2.matrix.e , y : obj2.matrix.f, width : parseInt(rect2.attr('width'),10), height : parseInt(rect2.attr('height'),10) }
 
-    console.info(obj1_info);
-    console.info(obj2_info);
+    // console.info(obj1_info);
+    // console.info(obj2_info);
     
     
 
@@ -144,7 +180,7 @@ export class RoadmapBuilderComponent implements OnInit {
     //     strokeWidth: 10
     // });
 
-    console.info('-----------------------------');
+    // console.info('-----------------------------');
     var line_path = this.paper.path(out).attr({
                                     id : id_obj1+'-'+id_obj2,
                                     class : 'join-line',
