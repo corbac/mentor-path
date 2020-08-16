@@ -1,7 +1,10 @@
 {
-    "author" : {"id" : "ec2831b65472967f42c143cc6b000df7"},
     "roadmap" : {
         "title" : "Step1",
+        "author" : {
+            "id" : "ec2831b65472967f42c143cc6b000df7",
+            "title" : "Demo Test"
+        },
         "config" : {
             "x" : 50,
             "y" : 75,

@@ -4,6 +4,8 @@ import { Component, OnInit } from '@angular/core';
 
 import 'snapsvg-cjs'
 import { ActivatedRouteSnapshot } from '@angular/router';
+import { RoadmapService } from '../roadmap.service';
+
 declare var Snap: any;
 
 @Component({
@@ -22,8 +24,10 @@ export class RoadmapBuilderComponent implements OnInit {
 
   test_json : string;
 
+  roadmap : any;
 
-  constructor() {
+
+  constructor(private roadmapService : RoadmapService) {
     this.height = 800;
     this.width = 1000;
 
@@ -65,15 +69,23 @@ export class RoadmapBuilderComponent implements OnInit {
     });
 
     this.extract_roadmap(this.test_json)
+
+    this.roadmap = this.roadmapService.getRoadmap().subscribe( 
+        res => this.extract_roadmap(res),
+        err => console.log('Error in RoadmapService::getRoadmap() :'+ err))
+
+    console.info(this.roadmap);
   }
 
-  extract_roadmap(roadmap : string){
-    let roadmapJson : JSON = JSON.parse(roadmap);
-    console.info(roadmapJson);
+  extract_roadmap(roadmap : any){
+    console.info(roadmap);
+    
+    // let roadmapJson : JSON = JSON.parse(roadmap);
+    // console.info(roadmapJson);
 
-    // Build First Step:
-    // this.createbox(this.paper,roadmapJson['roadmap']['title']);
-    this.extract_recursive(undefined, roadmapJson['roadmap'])
+    // // Build First Step:
+    // // this.createbox(this.paper,roadmapJson['roadmap']['title']);
+    // this.extract_recursive(undefined, roadmapJson['roadmap'])
 
   }
 
