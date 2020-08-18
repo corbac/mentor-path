@@ -31,8 +31,8 @@ export class RoadmapBuilderComponent implements OnInit {
     this.height = 800;
     this.width = 1000;
 
-    this.test_json = "{\"author\":{\"id\":\"ec2831b65472967f42c143cc6b000df7\"},\"roadmap\":{\"title\":\"Step1\",\"config\":{\"x\":50,\"y\":75,\"width\":200,\"height\":100,\"size\":\"m\",\"type\":\"step\"},\"children\":[{\"title\":\"Learn1\",\"config\":{\"x\":50,\"y\":75,\"width\":200,\"height\":100,\"size\":\"m\",\"type\":\"case\"},\"children\":[{\"title\":\"Learn1_1\",\"config\":{\"x\":50,\"y\":75,\"width\":200,\"height\":100,\"size\":\"m\",\"type\":\"case\"},\"children\":[]}]},{\"title\":\"Learn2\",\"config\":{\"x\":50,\"y\":75,\"width\":200,\"height\":100,\"size\":\"m\",\"type\":\"case\"},\"children\":[]}]}}"
-        
+    this.test_json = "{\"roadmap\":{\"title\":\"Step1\",\"author\":{\"id\":\"ec2831b65472967f42c143cc6b000df7\",\"title\":\"Demo Test\"},\"config\":{\"x\":50,\"y\":75,\"width\":200,\"height\":100,\"size\":\"m\",\"type\":\"step\"},\"children\":[{\"title\":\"Learn1\",\"config\":{\"x\":50,\"y\":75,\"width\":200,\"height\":100,\"size\":\"m\",\"type\":\"case\"},\"children\":[{\"title\":\"Learn1_1\",\"config\":{\"x\":50,\"y\":75,\"width\":200,\"height\":100,\"size\":\"m\",\"type\":\"case\"},\"children\":[]}]},{\"title\":\"Learn2\",\"config\":{\"x\":50,\"y\":75,\"width\":200,\"height\":100,\"size\":\"m\",\"type\":\"case\"},\"children\":[]}]}}"
+
   }
  
   ngOnInit(): void {
@@ -75,6 +75,12 @@ export class RoadmapBuilderComponent implements OnInit {
         err => console.log('Error in RoadmapService::getRoadmap() :'+ err))
 
     console.info(this.roadmap);
+
+    
+
+    // this.roadmapService.updateRoadmap(this.test_json).subscribe(
+    //   res => console.log(res),
+    //   err => console.log('Error in RoadmapService::updateRoadmap() :'+ err))
   }
 
   extract_roadmap(roadmap : any){
