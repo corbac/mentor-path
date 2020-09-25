@@ -5,8 +5,12 @@ import { Component, OnInit } from '@angular/core';
 import 'snapsvg-cjs'
 import { ActivatedRouteSnapshot } from '@angular/router';
 import { RoadmapService } from '../roadmap.service';
+import { RoadmapHandlerService } from '../roadmap-handler.service';
 
-declare var Snap: any;
+import 'lodash'
+
+declare var Snap : any;
+declare var _ : any;
 
 @Component({
   selector: 'app-roadmap-builder',
@@ -24,15 +28,21 @@ export class RoadmapBuilderComponent implements OnInit {
 
   test_json : string;
 
-  roadmap : any;
+  roadmap : JSON;
 
+  roadmapUpdateTimer : any;
 
-  constructor(private roadmapService : RoadmapService) {
+  // Config
+  DB_UPDATE : boolean = false
+  
+
+  constructor(private roadmapService : RoadmapService, private roadmapHandlerService : RoadmapHandlerService) {
     this.height = 800;
     this.width = 1000;
 
     this.test_json = "{\"roadmap\":{\"title\":\"Step1\",\"author\":{\"id\":\"ec2831b65472967f42c143cc6b000df7\",\"title\":\"Demo Test\"},\"config\":{\"x\":50,\"y\":75,\"width\":200,\"height\":100,\"size\":\"m\",\"type\":\"step\"},\"children\":[{\"title\":\"Learn1\",\"config\":{\"x\":50,\"y\":75,\"width\":200,\"height\":100,\"size\":\"m\",\"type\":\"case\"},\"children\":[{\"title\":\"Learn1_1\",\"config\":{\"x\":50,\"y\":75,\"width\":200,\"height\":100,\"size\":\"m\",\"type\":\"case\"},\"children\":[]}]},{\"title\":\"Learn2\",\"config\":{\"x\":50,\"y\":75,\"width\":200,\"height\":100,\"size\":\"m\",\"type\":\"case\"},\"children\":[]}]}}"
-
+    this.test_json = JSON.parse(this.test_json)
+    // console.log(this.roadmapHandlerService)
   }
  
   ngOnInit(): void {
@@ -41,18 +51,18 @@ export class RoadmapBuilderComponent implements OnInit {
     this.paper.attr({'id': 'thesvg'});
     // const c : any = this.paper.circle(50, 50, 100);
 
-    var carre1 : any = this.createbox(this.paper, 'carre1');
-    var carre2 : any = this.createbox(this.paper, 'carre2');
-    var carre3 : any = this.createbox(this.paper, 'carre3');
-    carre1.transform('t50,50');
-    carre2.transform('t270,120');
-    carre3.transform('t300,320');
+    // var carre1 : any = this.createbox(this.paper, 'carre1');
+    // var carre2 : any = this.createbox(this.paper, 'carre2');
+    // var carre3 : any = this.createbox(this.paper, 'carre3');
+    // carre1.transform('t50,50');
+    // carre2.transform('t270,120');
+    // carre3.transform('t300,320');
 
-    this.createJoinLine("carre1", "carre2")
-    this.createJoinLine("carre1", "carre3")
-    this.createJoinLine("carre2", "carre3")
+    // this.createJoinLine("carre1", "carre2")
+    // this.createJoinLine("carre1", "carre3")
+    // this.createJoinLine("carre2", "carre3")
 
-    carre2.mouseover((evt) => this.show_button_add_box(evt, carre2))
+    // carre2.mouseover((evt) => this.show_button_add_box(evt, carre2))
     // console.info(this.paper)
 
     let context : RoadmapBuilderComponent = this 
@@ -68,13 +78,13 @@ export class RoadmapBuilderComponent implements OnInit {
         // }
     });
 
-    this.extract_roadmap(this.test_json)
+    // this.extract_roadmap(this.test_json)
 
-    this.roadmap = this.roadmapService.getRoadmap().subscribe( 
+    this.roadmapService.getRoadmap().subscribe( 
         res => this.extract_roadmap(res),
         err => console.log('Error in RoadmapService::getRoadmap() :'+ err))
 
-    console.info(this.roadmap);
+    // console.info(this.roadmap);
 
     
 
@@ -86,29 +96,55 @@ export class RoadmapBuilderComponent implements OnInit {
   extract_roadmap(roadmap : any){
     console.info(roadmap);
     
-    // let roadmapJson : JSON = JSON.parse(roadmap);
-    // console.info(roadmapJson);
-
+    this.roadmap = roadmap
+    console.info(this.roadmap['roadmap']['children']);
+    console.log(_.find(this.roadmap['roadmap']['children'], {'title': 'Learn1'}))
     // // Build First Step:
     // // this.createbox(this.paper,roadmapJson['roadmap']['title']);
-    // this.extract_recursive(undefined, roadmapJson['roadmap'])
+    this.extract_recursive(undefined, this.roadmap['roadmap'])
 
   }
 
   extract_recursive(parentId : string, children){
-    this.createbox(this.paper,children['title'], 't${children[\'config\'][\'x\']} ${children[\'config\'][\'y\']}');
+    // console.info(children);
+    
+    this.createbox(this.paper, children['title'], 't' + children['config']['x'] + ' ' + children['config']['y']);
     if (parentId){
       console.info(parentId,children['title']);
       this.createJoinLine(parentId, children['title']);
     }
     
-
     if (children['children'].length > 0){
       children['children'].forEach(element => {
         this.extract_recursive(children['title'], element)
       });
       
     }
+  }
+
+  roadmapOnChanges(){
+
+    if (this.roadmapUpdateTimer){
+      clearTimeout(this.roadmapUpdateTimer)
+    }
+
+    this.roadmapUpdateTimer = setTimeout(() => {
+      if (this.DB_UPDATE){
+        this.updateRoadmap();
+      }
+    }, 2000)
+  }
+
+  updateRoadmap(){
+    // console.log("updateRoadmap :");
+    console.info('Json stat:');
+    console.info(this.roadmap);
+    
+    // console.log(this.roadmapHandlerService.updateCasePosition(this.test_json['roadmap'], {'x': 270 ,'y':300}, 'Learn2'))
+    
+    this.roadmapService.updateRoadmap(this.roadmap).subscribe(
+      res => console.log(res),
+      err => console.log('Error in RoadmapService::updateRoadmap() :'+ err))
   }
 
   move = function(dx,dy, el, context) {
@@ -124,12 +160,23 @@ export class RoadmapBuilderComponent implements OnInit {
     
     context.updateJoiLine(el.attr('id'))
   }
+
   start = function(el) {
     console.info('I\'m on the start Fucntion');
     el.data('origTransform', el.transform().local );
   }
 
-  createbox(paper : any, id : string, transform : string = undefined){
+  stopMove = function(el : any, group : any) {
+    console.log("Move stopped");
+    // console.log(this.roadmap);
+    // console.log(group.attr('id'));
+    // console.log(group.matrix.e);
+    this.roadmap.roadmap = this.roadmapHandlerService.updateCasePosition(this.roadmap.roadmap, {'x': group.matrix.e ,'y':group.matrix.f}, group.attr('id'))
+    // console.log(this.roadmap);
+    this.roadmapOnChanges()
+  }
+
+  createbox(paper : any, id : string, transform : any = undefined){
       var box = this.paper.rect(0, 0, 200, 100).attr({stroke: '#123456', 'strokeWidth': 5, 'fill': '#FFFFFF'});
       // var text = this.paper.text(15,15, "Hello Folk")
       var group = this.paper.g(box)//, text)
@@ -137,15 +184,17 @@ export class RoadmapBuilderComponent implements OnInit {
       let context : RoadmapBuilderComponent = this 
 
       if (transform){
+        console.info(transform);
+        
         group.transform(transform)
       }
+
+      group.mouseover((evt) => this.show_button_add_box(evt, group))
       
       // group.data('origTransform', group.transform().local );
       return group.drag(  (dx,dy) => {this.move(dx, dy, group,  context)},
                           () => {this.start(group)}, // why different from this.start(group)
-                          function(){
-                            console.log("Move stopped");
-                          }
+                          (el) => {this.stopMove(el, group)}
                         )
   }
 
@@ -269,9 +318,24 @@ export class RoadmapBuilderComponent implements OnInit {
       var t_x = parseInt(parent_box.transform().global.replace('t', '').split(',')[0],10)
       var t_y = parseInt(parent_box.transform().global.replace('t', '').split(',')[1],10)+500
 
-      this.createbox(this.paper, 'carre'+this.box_increment).transform('t'+t_x+','+t_y)
-      this.createJoinLine(parent_id, 'carre'+this.box_increment)
+      let next_id = parent_id+'_'+this.box_increment
+
+      let newCase = this.createbox(this.paper, next_id).transform('t'+t_x+','+t_y)
+      this.createJoinLine(parent_id, next_id)
       this.box_increment++
+      // console.info(this.roadmap);
+      
+
+      this.roadmap['roadmap'] = this.roadmapHandlerService.addChildrenCase(
+                                                this.roadmap['roadmap'],
+                                                parent_id,
+                                                {'config' : {'x' : t_x, 'y' : t_y, 'height' : 100, 'width' : 200, 'size' : 'm', 'type': 'case'},
+                                                 'title' : next_id,
+                                                 'children' : []
+                                                })
+      
+      // console.info(this.roadmap);
+      this.roadmapOnChanges()
       // // console.log(g)
       // console.log(this.paper.select('#'+m_case)[0].attr('transform').global)
       // return function(event){
@@ -279,6 +343,31 @@ export class RoadmapBuilderComponent implements OnInit {
       //     carre.transform('t500,320');
       // }
   }
+
+  remove_case(evt : any, el : any){
+    console.info(this)
+    console.log('> add_case, parent_id:' + el.data("parent_id"))
+
+    let parent_id = el.data("parent_id")
+
+    let all_el_to_delete = new Set([ this.paper.selectAll('g[id^='+parent_id+']'),
+                                        this.paper.selectAll('path[id^='+parent_id+']'),
+                                        this.paper.selectAll('path[id$='+parent_id+']')
+                                      ])
+    // console.info(all_el_to_delete);
+
+    all_el_to_delete.forEach(x => {
+      x.forEach(element => {
+        element.remove()
+      });
+    })
+    this.roadmap['roadmap'] = this.roadmapHandlerService.removeChildrenCase(
+                                              this.roadmap['roadmap'],
+                                              parent_id)
+    
+    console.info(this.roadmap);
+    this.roadmapOnChanges()
+}
   
   show_button_add_box(evt : any, el : any){
     console.log(el)
@@ -304,7 +393,19 @@ export class RoadmapBuilderComponent implements OnInit {
         // console.info(add_button.data("parent_id"))
         add_button.attr({"id" : "addBoxButton"})
         add_button.click((evt) => context.add_case(evt, add_button));
+        
         // console.log("2000!")
+        let remove_button = context.paper.select("#removeBoxButton")
+        if(remove_button){
+            remove_button.remove()
+        }
+        remove_button = context.paper.rect(x_t+200, y_t+15, 10, 10)
+        remove_button.data("parent_id", id)
+        // console.info(add_button.data("parent_id"))
+        remove_button.attr({"id" : "removeBoxButton"})
+        remove_button.attr('fill', '#EB6154');
+        remove_button.click((evt) => context.remove_case(evt, remove_button));
+
     }, 2000);
   }
 

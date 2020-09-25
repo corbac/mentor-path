@@ -5,11 +5,13 @@ import { HttpClientModule } from '@angular/common/http';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { RoadmapBuilderComponent } from './roadmap-builder/roadmap-builder.component';
+import { UserLoginComponent } from './user-login/user-login.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    RoadmapBuilderComponent
+    RoadmapBuilderComponent,
+    UserLoginComponent
   ],
   imports: [
     BrowserModule,
