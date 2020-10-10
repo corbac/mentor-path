@@ -8,13 +8,15 @@ import { AppComponent } from './app.component';
 import { RoadmapBuilderComponent } from './roadmap-builder/roadmap-builder.component';
 import { UserLoginComponent } from './user-login/user-login.component';
 import { UserRegistrationComponent } from './user-registration/user-registration.component';
+import { SearchEngineComponent } from './search-engine/search-engine.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     RoadmapBuilderComponent,
     UserLoginComponent,
-    UserRegistrationComponent
+    UserRegistrationComponent,
+    SearchEngineComponent
   ],
   imports: [
     BrowserModule,

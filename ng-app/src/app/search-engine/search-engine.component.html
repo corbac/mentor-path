@@ -1,0 +1,14 @@
+<p>search-engine works!</p>
+
+<form (ngSubmit)="onSubmit()">
+    <div class="form-group">
+        <input type="text" class="form-control" id="search-text"
+              required
+              [(ngModel)]="search_text" name="search-text"
+              #name="ngModel">
+        <div [hidden]="name.valid || name.pristine"
+            class="alert alert-danger">
+          TODO
+        </div>
+    </div>
+</form>

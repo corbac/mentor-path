@@ -12,9 +12,9 @@ export class UserLoginComponent implements OnInit {
 
   constructor() {
     this.user = new User();
-    console.info('user :');
+    // console.info('user :');
     
-    console.info(this.user);
+    // console.info(this.user);
     
   }
 
