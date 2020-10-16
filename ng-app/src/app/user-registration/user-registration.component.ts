@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { User } from '../model/user';
+import { UserService } from '../services/user.service';
 
 @Component({
   selector: 'app-user-registration',
@@ -9,7 +10,7 @@ import { User } from '../model/user';
 export class UserRegistrationComponent implements OnInit {
   user : User;
 
-  constructor() {
+  constructor(private _userService : UserService) {
     this.user = new User();
   }
 
@@ -19,7 +20,11 @@ export class UserRegistrationComponent implements OnInit {
   onSubmit(){
     console.info('Sumbited !');
     console.info(this.user);
+
+    this._userService.registration(this.user).subscribe(
+      res => console.log(res),
+      err => console.log('Error in RoadmapService::updateRoadmap() :'+ err)
+      )
     
   }
-
 }

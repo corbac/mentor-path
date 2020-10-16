@@ -23,7 +23,7 @@ app.use(bodyParser.json())
 app.use(function(req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");
   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-  res.header('Access-Control-Allow-Methods', 'GET,PUT,OPTIONS');
+  res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,OPTIONS');
   next();
 });
 
@@ -95,6 +95,70 @@ app.put('/update-roadmap', function(req, res) {
     }
 
   });
+})
+
+app.put('/register-user', function(req, res) {
+  console.log(req.body);
+  res.send(req.body)
+
+  if (!req.body||req.body=={}){
+    return res.status(400).send("Bad Request")
+  }
+
+  // console.log(req);
+  let user = req.body
+
+  let hash = crypto.createHash('sha256');
+  hash.update(user.pwd)
+  let hashPassword = hash.digest('hex')
+  user.password = hashPassword
+
+  hash = crypto.createHash('sha256');
+  hash.update(user.email)
+  let hashEmailToID = hash.digest('hex')
+  console.log(hashPassword);
+  console.log(hashEmailToID);
+  // res.send([req.params,hashString])
+
+  //'b861691e2005f156ee35c2a8849a4e9c022e33732c95a192810b23970806ffbf'
+  var nano = require('nano')('http://mp:Leroro123@localhost:5984/')
+  let roadmap = nano.use('users')
+
+  roadmap.insert({ _id: hashEmailToID, user}, function(err, body) {
+    if (!err)
+      console.log(body)
+  })
+
+})
+
+app.post('/login-user', function(req, res) {
+  console.log(req.body);
+  res.send(req.body)
+
+  if (!req.body||req.body=={}){
+    return res.status(400).send("Bad Request")
+  }
+
+  const hash = crypto.createHash('sha256');
+  hash.update(req.body.email)
+  let hashString = hash.digest('hex')
+  // res.send([req.params,hashString])
+
+  //'b861691e2005f156ee35c2a8849a4e9c022e33732c95a192810b23970806ffbf'
+  var nano = require('nano')('http://mp:Leroro123@localhost:5984/')
+  let roadmap = nano.use('users')
+  roadmap.get(hashString, { revs_info: true }, function(err, body) {
+    if (!err){
+      // console.log(body);
+      res.send(true)
+    }
+
+  });
+
+
+  // roadmaps/b861691e2005f156ee35c2a8849a4e9c022e33732c95a192810b23970806ffbf
+  // res.send(hashString)
+
 })
 
 
