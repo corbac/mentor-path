@@ -1,6 +1,6 @@
 interface IAuthor{
-  id : string,
-  title : string
+  id: string,
+  title: string
 }
 
 interface IConfig {
@@ -12,15 +12,36 @@ interface IConfig {
   type: string
 }
 
+interface ILink{
+  url: string,
+  title: string
+}
+
 interface ICase{
-  title : string,
-  config : IConfig,
-  children : Array<ICase>
+  title: string,
+  descriptio: string,
+  links: Array<ILink>,
+  config: IConfig,
+  children: Array<ICase>
 }
 
 interface IRoadmap{
   root_case : ICase,
-  author : IAuthor,
+  author : IAuthor
+}
+
+export class Case{
+  title: string
+  description: string
+  links: Array<ILink>
+  config: IConfig
+  children: Array<ICase>
+
+  constructor(
+    ca? : ICase
+  ){
+  }
+
 }
 
 export class Roadmap {

@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Case } from '../model/case'
 // import 'snapsvg'; // Seems to not be a good way to do 
 // import '@types/snapsvg'
 
@@ -29,6 +30,7 @@ export class RoadmapBuilderComponent implements OnInit {
   test_json : string;
 
   roadmap : JSON;
+  selected_case : Case
 
   roadmapUpdateTimer : any;
 
@@ -439,7 +441,10 @@ export class RoadmapBuilderComponent implements OnInit {
           // console.log(localpoint)
           // console.log(x[0].attr('width'))
           // console.log(in_box(localpoint, x))
-          if (this.in_box(localpoint, x) && !x.select('.foreign')){
+          let is_in_box = this.in_box(localpoint, x)
+          
+
+          if (is_in_box && !x.select('.foreign')){
               console.log('detecté quand meme'+ x)
               var myforeign = document.createElementNS('http://www.w3.org/2000/svg', 'foreignObject')
               var textdiv = document.createElement("div");
@@ -464,12 +469,15 @@ export class RoadmapBuilderComponent implements OnInit {
               x.append(myforeign)
           }
 
-          if (this.in_box(localpoint, x)){
+          if (is_in_box){
               // console.log(document.querySelector('#'+x.attr('id')+' .foreign div'))
               var element : any = document.querySelector('#'+x.attr('id')+' .foreign div')
               // var element = x.select('.foreign div');
               // console.log(element)
               element.focus()
+              console.info(x.attr('id'));
+              this.selected_case= this.roadmapHandlerService.getCaseByID(this.roadmap['roadmap'], x.attr('id'))
+              console.info(this.selected_case);
               // element.addEventListener('change', (event) => {
               //     console.log('yeaaah!')
               //     this.contentEditable = "false"

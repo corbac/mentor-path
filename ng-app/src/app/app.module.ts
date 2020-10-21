@@ -9,6 +9,7 @@ import { RoadmapBuilderComponent } from './roadmap-builder/roadmap-builder.compo
 import { UserLoginComponent } from './user-login/user-login.component';
 import { UserRegistrationComponent } from './user-registration/user-registration.component';
 import { SearchEngineComponent } from './search-engine/search-engine.component';
+import { RoadmapSidePageComponent } from './roadmap-side-page/roadmap-side-page.component';
 
 @NgModule({
   declarations: [
@@ -16,7 +17,8 @@ import { SearchEngineComponent } from './search-engine/search-engine.component';
     RoadmapBuilderComponent,
     UserLoginComponent,
     UserRegistrationComponent,
-    SearchEngineComponent
+    SearchEngineComponent,
+    RoadmapSidePageComponent
   ],
   imports: [
     BrowserModule,

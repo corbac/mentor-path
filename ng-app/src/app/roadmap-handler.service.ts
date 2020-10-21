@@ -28,6 +28,33 @@ export class RoadmapHandlerService {
     return data
   }
 
+  getCaseByID(data : any, case_id : any, found : any = undefined){
+    // console.info(data);
+
+    let _found = found
+
+    if (_found) return _found
+    
+    if (data['children'].length > 0){
+      data['children'].forEach(element => {
+        console.info(element);
+        
+        if(element['title'] == case_id) {
+          console.info('trouvééé');
+          _found = element
+          return element
+          
+        } else {     
+          element = this.getCaseByID(element, case_id, _found)
+          // console.log(element)
+          _found = element
+          return element
+        }
+      });
+    }
+    return _found
+  }
+
   addChildrenCase(data : any, case_id : any, child_case_config : any){
     if (data['children'].length > 0){
       data['children'].forEach(element => {
