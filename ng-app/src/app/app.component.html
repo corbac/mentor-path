@@ -2,8 +2,10 @@
 <nav class="navbar navbar-light bg-light">
     <a class="navbar-brand">{{title}}</a>
     <app-search-engine></app-search-engine>
+    <img src="assets/img/profile.svg" width="50" height="50" alt="" loading="lazy">
 </nav>
 
 <app-user-login></app-user-login>
 <app-user-registration></app-user-registration>
-<app-roadmap-builder></app-roadmap-builder>
+
+<router-outlet></router-outlet>

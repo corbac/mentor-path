@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Case } from '../model/case'
+import { ActivatedRoute } from '@angular/router'
 // import 'snapsvg'; // Seems to not be a good way to do 
 // import '@types/snapsvg'
 
@@ -38,7 +39,9 @@ export class RoadmapBuilderComponent implements OnInit {
   DB_UPDATE : boolean = false
   
 
-  constructor(private roadmapService : RoadmapService, private roadmapHandlerService : RoadmapHandlerService) {
+  constructor(  private roadmapService : RoadmapService,
+                private roadmapHandlerService : RoadmapHandlerService,
+                private route: ActivatedRoute) {
     this.height = 800;
     this.width = 1000;
 
@@ -48,6 +51,7 @@ export class RoadmapBuilderComponent implements OnInit {
   }
  
   ngOnInit(): void {
+    
     console.log(this.height,this.width);
     this.paper = Snap(this.height,this.width);
     this.paper.attr({'id': 'thesvg'});
@@ -82,7 +86,7 @@ export class RoadmapBuilderComponent implements OnInit {
 
     // this.extract_roadmap(this.test_json)
 
-    this.roadmapService.getRoadmap().subscribe( 
+    this.roadmapService.getRoadmapByTitle(this.getRoadmapFromRoute()).subscribe( 
         res => this.extract_roadmap(res),
         err => console.log('Error in RoadmapService::getRoadmap() :'+ err))
 
@@ -93,6 +97,10 @@ export class RoadmapBuilderComponent implements OnInit {
     // this.roadmapService.updateRoadmap(this.test_json).subscribe(
     //   res => console.log(res),
     //   err => console.log('Error in RoadmapService::updateRoadmap() :'+ err))
+  }
+
+  getRoadmapFromRoute(): string {
+    return this.route.snapshot.paramMap.get('title');
   }
 
   extract_roadmap(roadmap : any){

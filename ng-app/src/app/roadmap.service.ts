@@ -26,6 +26,21 @@ export class RoadmapService {
     // return data
 
   }
+  
+  getRoadmapByTitle(title : string) {
+    let data : any;
+    return this.http.get<any[]>(this._heroesUrl+'get-roadmap-'+title)//.subscribe( 
+    //   res => data
+    //   err => console.log('Error in RoadmapService::getRoadmap() :'+ err))
+    // console.log(data)
+    // console.log(o)
+    // return data
+
+  }
+
+  getTop10Roadmap() {
+    return this.http.get<any[]>(this._heroesUrl+'get-top-10-roadmap')
+  }
 
   updateRoadmap(newRoadmap : any) {
     let data : any;

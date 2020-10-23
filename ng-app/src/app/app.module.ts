@@ -10,6 +10,8 @@ import { UserLoginComponent } from './user-login/user-login.component';
 import { UserRegistrationComponent } from './user-registration/user-registration.component';
 import { SearchEngineComponent } from './search-engine/search-engine.component';
 import { RoadmapSidePageComponent } from './roadmap-side-page/roadmap-side-page.component';
+import { HomePageComponent } from './container/home-page/home-page.component';
+import { RoadmapViewPageComponent } from './container/roadmap-view-page/roadmap-view-page.component';
 
 @NgModule({
   declarations: [
@@ -18,7 +20,9 @@ import { RoadmapSidePageComponent } from './roadmap-side-page/roadmap-side-page.
     UserLoginComponent,
     UserRegistrationComponent,
     SearchEngineComponent,
-    RoadmapSidePageComponent
+    RoadmapSidePageComponent,
+    HomePageComponent,
+    RoadmapViewPageComponent
   ],
   imports: [
     BrowserModule,
