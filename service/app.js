@@ -133,7 +133,7 @@ app.put('/register-user', function(req, res) {
 
 app.post('/login-user', function(req, res) {
   console.log(req.body);
-  res.send(req.body)
+  // res.send(req.body)
 
   if (!req.body||req.body=={}){
     return res.status(400).send("Bad Request")
@@ -142,17 +142,26 @@ app.post('/login-user', function(req, res) {
   const hash = crypto.createHash('sha256');
   hash.update(req.body.email)
   let hashString = hash.digest('hex')
-  // res.send([req.params,hashString])
-
+  // // res.send([req.params,hashString])
+  console.log(hashString);
+  // res.send({'lol' : hashString})
   //'b861691e2005f156ee35c2a8849a4e9c022e33732c95a192810b23970806ffbf'
   var nano = require('nano')('http://mp:Leroro123@localhost:5984/')
   let roadmap = nano.use('users')
   roadmap.get(hashString, { revs_info: true }, function(err, body) {
     if (!err){
-      // console.log(body);
-      res.send(true)
+      console.log(body);
+      const hash = crypto.createHash('sha256');
+      hash.update(req.body.pwd)
+      let passwordHashed = hash.digest('hex')
+      // console.log(body.user.password == passwordHashed);
+      if (body.user.password == passwordHashed){
+        let user = body.user
+        user['uid'] = body._id
+        res.send(user)
+      }
+      return res.send(false)
     }
-
   });
 
 

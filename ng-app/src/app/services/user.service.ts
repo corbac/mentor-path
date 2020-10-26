@@ -20,7 +20,7 @@ export class UserService {
   }
 
   login(user : User){
-    console.log(user)
-    return this.http.post<any>(this._heroesUrl+'login-user', user, this.httpOptions)
+    // console.log(user)
+    return this.http.post<any>(this._heroesUrl+'login-user', JSON.stringify(user), this.httpOptions)
   }
 }

@@ -11,6 +11,8 @@ export class UserLoginComponent implements OnInit {
 
   user : User;
 
+  // is_logged : boolean;
+
   constructor(private _userService : UserService) {
     this.user = new User();
     // console.info('user :');
@@ -20,6 +22,7 @@ export class UserLoginComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    // this.is_logged = this.get_is_logged()
   }
 
   onSubmit(){
@@ -27,10 +30,25 @@ export class UserLoginComponent implements OnInit {
     console.info(this.user);
 
     this._userService.login(this.user).subscribe(
-      res => console.log(res),
+      res => this.login(res),
       err => console.log('Error in RoadmapService::updateRoadmap() :'+ err)
       )
+  }
+
+  login(res_user : any){
+    console.info(res_user);
     
+    if (res_user){
+      localStorage.setItem('user', JSON.stringify({'name' : res_user.name, 'uid' : res_user.uid}))
+      // this.is_logged = true
+      // location.reload()
+    }
+  }
+
+  is_logged() : boolean{
+    // console.info(localStorage.getItem('user') == undefined);
+    
+    return !(localStorage.getItem('user') == undefined)
   }
 
 }

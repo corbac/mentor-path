@@ -27,4 +27,10 @@ export class UserRegistrationComponent implements OnInit {
       )
     
   }
+
+  is_logged() : boolean{
+    // console.info(localStorage.getItem('user') == undefined);
+    
+    return !(localStorage.getItem('user') == undefined)
+  }
 }

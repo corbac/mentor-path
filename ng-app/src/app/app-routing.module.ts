@@ -8,7 +8,9 @@ import { RoadmapViewPageComponent } from './container/roadmap-view-page/roadmap-
 const routes: Routes = [
   // { path: '', redirectTo: '/dashboard', pathMatch: 'full' },
   { path: '', component: HomePageComponent },
-  { path: 'roadmap/:title', component: RoadmapViewPageComponent }
+  { path: 'home', component: HomePageComponent },
+  { path: 'roadmap/:title', component: RoadmapViewPageComponent },
+  { path: 'roadmap/new', component: RoadmapViewPageComponent },
 ];
 
 @NgModule({

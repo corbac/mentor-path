@@ -53,8 +53,16 @@ export class RoadmapBuilderComponent implements OnInit {
   ngOnInit(): void {
     
     console.log(this.height,this.width);
-    this.paper = Snap(this.height,this.width);
-    this.paper.attr({'id': 'thesvg'});
+    // var svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+    // this.paper = Snap(svg);
+    this.paper = Snap('#thesvg');
+    
+    // this.paper.attr({ 'id': 'thesvg',
+    //                   'height': this.height,
+    //                   'width': this.width
+    //                   });
+
+    // console.info(this.paper);
     // const c : any = this.paper.circle(50, 50, 100);
 
     // var carre1 : any = this.createbox(this.paper, 'carre1');
@@ -86,9 +94,39 @@ export class RoadmapBuilderComponent implements OnInit {
 
     // this.extract_roadmap(this.test_json)
 
-    this.roadmapService.getRoadmapByTitle(this.getRoadmapFromRoute()).subscribe( 
+    if(this.getRoadmapFromRoute() != 'new'){
+      console.info(this.getRoadmapFromRoute());
+      
+      this.roadmapService.getRoadmapByTitle(this.getRoadmapFromRoute()).subscribe( 
         res => this.extract_roadmap(res),
         err => console.log('Error in RoadmapService::getRoadmap() :'+ err))
+      
+      
+    }else{
+      
+      this.extract_roadmap({
+        "roadmap": {
+          "title": "Step1",
+          "author": {
+            "id": localStorage.getItem('user')['uid'],
+            "title": localStorage.getItem('user')['uid'] + 'new roadmap'
+          },
+          "config": {
+            "x": 50,
+            "y": 75,
+            "width": 200,
+            "height": 100,
+            "size": "m",
+            "type": "step"
+          },
+          "children": []
+        }
+      })
+
+      document.getElementById("roadmap-title").innerHTML = localStorage.getItem('user')['uid'] + ' new roadmap';
+    }
+
+    
 
     // console.info(this.roadmap);
 
@@ -109,6 +147,7 @@ export class RoadmapBuilderComponent implements OnInit {
     this.roadmap = roadmap
     console.info(this.roadmap['roadmap']['children']);
     console.log(_.find(this.roadmap['roadmap']['children'], {'title': 'Learn1'}))
+    document.getElementById("roadmap-title").innerHTML = this.roadmap['roadmap']['author']['title'];
     // // Build First Step:
     // // this.createbox(this.paper,roadmapJson['roadmap']['title']);
     this.extract_recursive(undefined, this.roadmap['roadmap'])
