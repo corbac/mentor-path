@@ -540,4 +540,14 @@ export class RoadmapBuilderComponent implements OnInit {
   //     mousedownonelement = true;
   // }
 
+  updateRoadMapTitle(event: any){
+    // setTimeout(()=> {
+    this.roadmap['roadmap']['author']['title'] = event.target.innerHTML;
+    this.roadmapOnChanges()
+    console.info(event.target.innerHTML);
+    console.info(this.roadmap);
+    // }, 2000)
+    
+  }
+
 }

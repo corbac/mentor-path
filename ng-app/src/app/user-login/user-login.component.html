@@ -1,5 +1,5 @@
-<p>user-login works!</p>
 <div *ngIf="!is_logged()">
+  <p>user-login works!</p>
   <form (ngSubmit)="onSubmit()">
     <div class="form-group">
         <label for="email">Login</label>
@@ -27,6 +27,7 @@
   </form>
 </div>
 <div *ngIf="is_logged()">
+  <p>user-profile works!</p>
   <ul>
     <li><a routerLink="roadmap/new" routerLinkActive="active">New Roadmap</a></li>
   </ul>
