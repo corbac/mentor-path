@@ -31,12 +31,15 @@ export class RoadmapBuilderComponent implements OnInit {
   test_json : string;
 
   roadmap : JSON;
+  is_new_roadmap : boolean = false
   selected_case : Case
 
   roadmapUpdateTimer : any;
 
   // Config
-  DB_UPDATE : boolean = false
+  DB_UPDATE : boolean = true
+  
+
   
 
   constructor(  private roadmapService : RoadmapService,
@@ -101,15 +104,21 @@ export class RoadmapBuilderComponent implements OnInit {
         res => this.extract_roadmap(res),
         err => console.log('Error in RoadmapService::getRoadmap() :'+ err))
       
+      this.is_new_roadmap = false
       
     }else{
+
+      console.info(JSON.parse(localStorage.getItem('user')))
+
+      let ls_content = JSON.parse(localStorage.getItem('user'))
+      // let dt = new Date()
       
       this.extract_roadmap({
         "roadmap": {
           "title": "Step1",
           "author": {
-            "id": localStorage.getItem('user')['uid'],
-            "title": localStorage.getItem('user')['uid'] + 'new roadmap'
+            "id": ls_content.uid,
+            "title": ls_content.name + ' new roadmap'
           },
           "config": {
             "x": 50,
@@ -123,7 +132,8 @@ export class RoadmapBuilderComponent implements OnInit {
         }
       })
 
-      document.getElementById("roadmap-title").innerHTML = localStorage.getItem('user')['uid'] + ' new roadmap';
+      this.is_new_roadmap = true
+      // document.getElementById("roadmap-title").innerHTML = localStorage.getItem('user')['uid'] + ' new roadmap';
     }
 
     
@@ -190,10 +200,20 @@ export class RoadmapBuilderComponent implements OnInit {
     console.info(this.roadmap);
     
     // console.log(this.roadmapHandlerService.updateCasePosition(this.test_json['roadmap'], {'x': 270 ,'y':300}, 'Learn2'))
+    if (this.is_new_roadmap) {
+      this.roadmapService.saveRoadmap(this.roadmap).subscribe(
+        res => {
+                console.info(res);
+                this.is_new_roadmap = false;
+                this.roadmap['_id'] = res.id
+                },
+        err => console.log('Error in RoadmapService::updateRoadmap() :'+ err))
+    }else {
+      this.roadmapService.updateRoadmap(this.roadmap).subscribe(
+        res => console.log(res),
+        err => console.log('Error in RoadmapService::updateRoadmap() :'+ err))
+    }
     
-    this.roadmapService.updateRoadmap(this.roadmap).subscribe(
-      res => console.log(res),
-      err => console.log('Error in RoadmapService::updateRoadmap() :'+ err))
   }
 
   move = function(dx,dy, el, context) {

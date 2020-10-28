@@ -34,6 +34,30 @@ app.get('/', function (req, res) {
   console.log('hi')
 })
 
+
+app.get('/get-trending-roadmaps', function(req, res) {
+
+  var nano = require('nano')('http://mp:Leroro123@localhost:5984/')
+  let roadmap = nano.use('roadmaps')
+  let q = {
+    selector : {
+      "roadmap" : {
+        "author" : {
+          "title" : req.params.rdmpId
+        }
+      }
+    }
+  }
+  roadmap.list({limit : 10}, function(err, body) {
+    // console.log('heelo');
+    if (!err){
+      console.log(body);
+      res.send(body['rows'])
+    }
+
+  });
+})
+
 app.get('/get-roadmap-:rdmpId', function(req, res) {
   const hash = crypto.createHash('sha256');
   hash.update(req.params.rdmpId)
@@ -43,13 +67,31 @@ app.get('/get-roadmap-:rdmpId', function(req, res) {
   //'b861691e2005f156ee35c2a8849a4e9c022e33732c95a192810b23970806ffbf'
   var nano = require('nano')('http://mp:Leroro123@localhost:5984/')
   let roadmap = nano.use('roadmaps')
-  roadmap.get(hashString, { revs_info: true }, function(err, body) {
+  let q = {
+    selector : {
+      "roadmap" : {
+        "author" : {
+          "title" : req.params.rdmpId
+        }
+      }
+    }
+  }
+  roadmap.find(q, function(err, body) {
+    // console.log('heelo');
     if (!err){
-      // console.log(body);
-      res.send(body)
+      console.log(body);
+      res.send(body['docs'][0])
     }
 
   });
+
+  // roadmap.get(hashString, { revs_info: true }, function(err, body) {
+  //   if (!err){
+  //     // console.log(body);
+  //     res.send(body)
+  //   }
+
+  // });
 
 
   // roadmaps/b861691e2005f156ee35c2a8849a4e9c022e33732c95a192810b23970806ffbf
@@ -58,24 +100,24 @@ app.get('/get-roadmap-:rdmpId', function(req, res) {
 })
 
 app.put('/update-roadmap', function(req, res) {
-  console.log(req.body.roadmap.author.title);
-  res.send(req.body)
+  console.log(req.body.roadmap);
+  // res.send(req.body)
 
   if (!req.body||req.body=={}){
     return res.status(400).send("Bad Request")
   }
 
   // console.log(req);
-  const hash = crypto.createHash('sha256');
-  hash.update(req.body.roadmap.author.title.replace(' ', '_'))
-  let hashString = hash.digest('hex')
-  console.log(hashString);
+  // const hash = crypto.createHash('sha256');
+  // hash.update(req.body.roadmap.author.title.replace(' ', '_'))
+  // let hashString = hash.digest('hex')
+  // console.log(hashString);
   // res.send([req.params,hashString])
 
   //'b861691e2005f156ee35c2a8849a4e9c022e33732c95a192810b23970806ffbf'
   var nano = require('nano')('http://mp:Leroro123@localhost:5984/')
   let roadmap = nano.use('roadmaps')
-  roadmap.get(hashString, function(err, old) {
+  roadmap.get(req.body._id, function(err, old) {
     if (!err){
       // console.log("- Headers:");
       console.log("- Old:");
@@ -83,12 +125,12 @@ app.put('/update-roadmap', function(req, res) {
       // // res.send(body)
       // console.log(req.body);
       // console.log("-----------");
-      roadmap.insert({"_id": hashString, "_rev": old._rev, "roadmap" : req.body.roadmap}, function(err, _new) {
+      roadmap.insert({"_id": req.body._id, "_rev": old._rev, "roadmap" : req.body.roadmap}, function(err, _new) {
         console.log("update...");
         if (!err){
           console.log("- New:");
           console.log(_new);
-          // res.send(body)
+          res.send(_new)
           console.log("-----------");
         }
       });
@@ -170,6 +212,32 @@ app.post('/login-user', function(req, res) {
 
 })
 
+app.post('/save-roadmap', function(req, res) {
+  console.log(req.body);
+  // res.send(req.body)
+
+  if (!req.body||req.body=={}){
+    return res.status(400).send("Bad Request")
+  }
+
+  let roadmap = req.body.roadmap
+  let roadmap_id_hashable = roadmap.author.id + roadmap.author.title.replace(' ', '_') + Date.now()
+
+  const hash = crypto.createHash('sha256');
+  hash.update(roadmap_id_hashable)
+  let hashString = hash.digest('hex')
+  // // res.send([req.params,hashString])
+  console.log(hashString);
+  // res.send({'lol' : hashString})
+  //'b861691e2005f156ee35c2a8849a4e9c022e33732c95a192810b23970806ffbf'
+  var nano = require('nano')('http://mp:Leroro123@localhost:5984/')
+  let roadmap_db = nano.use('roadmaps')
+  roadmap_db.insert({ _id: hashString, roadmap}, function(err, body) {
+    if (!err)
+      console.log(body)
+      res.send(body)
+  })
+})
 
 app.post('/save-roadmap-:rdmpId', function(req, res) {
   console.log('post');

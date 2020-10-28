@@ -53,6 +53,10 @@ export class RoadmapService {
     // return data
   }
 
+  saveRoadmap(roadmap : any){
+    return this.http.post<any>(this._heroesUrl+'save-roadmap', roadmap, this.httpOptions)
+  }
+
   
 
 }
