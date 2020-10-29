@@ -12,6 +12,7 @@ import { SearchEngineComponent } from './search-engine/search-engine.component';
 import { RoadmapSidePageComponent } from './roadmap-side-page/roadmap-side-page.component';
 import { HomePageComponent } from './container/home-page/home-page.component';
 import { RoadmapViewPageComponent } from './container/roadmap-view-page/roadmap-view-page.component';
+import { RoadmapTrendingListComponent } from './roadmap-trending-list/roadmap-trending-list.component';
 
 @NgModule({
   declarations: [
@@ -22,7 +23,8 @@ import { RoadmapViewPageComponent } from './container/roadmap-view-page/roadmap-
     SearchEngineComponent,
     RoadmapSidePageComponent,
     HomePageComponent,
-    RoadmapViewPageComponent
+    RoadmapViewPageComponent,
+    RoadmapTrendingListComponent
   ],
   imports: [
     BrowserModule,

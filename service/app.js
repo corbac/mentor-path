@@ -35,6 +35,9 @@ app.get('/', function (req, res) {
 })
 
 
+/*
+TODO : Understand for each and async issue to make better code : https://stackoverflow.com/questions/38406920/best-way-to-wait-for-foreach-to-complete 
+*/
 app.get('/get-trending-roadmaps', function(req, res) {
 
   var nano = require('nano')('http://mp:Leroro123@localhost:5984/')
@@ -48,11 +51,55 @@ app.get('/get-trending-roadmaps', function(req, res) {
       }
     }
   }
+  var roadmaps_res = []
   roadmap.list({limit : 10}, function(err, body) {
     // console.log('heelo');
     if (!err){
-      console.log(body);
-      res.send(body['rows'])
+      // console.log(body);
+      // res.send(body['rows'])
+
+      let source = body['rows']
+      function deeper(err, body) {
+        console.info('deeper:');
+        roadmaps_res.push(body)
+        console.info(roadmaps_res);
+        if (source.length == roadmaps_res.length){
+          console.info('send:');
+          console.info(roadmaps_res)
+          res.send(roadmaps_res)
+        }
+      }
+      
+      function forfun(data, index, arr){
+        roadmap.get(data.id, deeper)
+        console.info('forfun:');
+        console.info(roadmaps_res)
+        if (index == arr.length -1) resolve();
+      }
+
+      var job = new Promise((resolve, reject) => {
+        body['rows'].forEach(function (data, index, arr){
+          roadmap.get(data.id, deeper)
+          console.info('forfun:');
+          console.info(roadmaps_res)
+          if (index == 0){
+            console.info('fun res')
+            console.info(roadmaps_res)
+            // console.info(index)
+            resolve();
+          } 
+        });
+      });
+      // console.info(roadmaps_res);
+      // body['rows'].forEach(forfun);
+
+      job.then(() => {
+        // console.info('send:');
+        // console.info(roadmaps_res)
+        // res.send(roadmaps_res)
+      });
+      
+      // console.info(roadmaps_res);
     }
 
   });
