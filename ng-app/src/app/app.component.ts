@@ -7,4 +7,10 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
   title = 'Mentor Path';
+
+  is_logged() : boolean{
+    // console.info(localStorage.getItem('user') == undefined);
+    
+    return !(localStorage.getItem('user') == undefined)
+  }
 }

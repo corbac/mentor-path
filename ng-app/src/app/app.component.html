@@ -1,11 +1,52 @@
-<h1></h1>
-<nav class="navbar navbar-light bg-light">
-    <a class="navbar-brand">{{title}}</a>
+<nav class="navbar navbar-light bg-mentor-path ">
+    <a class="navbar-brand">
+        <img src="assets/img/brand.svg" width="50" height="50" class="d-inline-block align-top" alt="" loading="lazy">
+        {{title}}
+    </a>
     <app-search-engine></app-search-engine>
-    <img src="assets/img/profile.svg" width="50" height="50" alt="" loading="lazy">
+    <div *ngIf="!is_logged()">
+        <a href="" data-toggle="modal" data-target="#exampleModal">
+            <img src="assets/img/profile.svg" width="50" height="50" alt="" loading="lazy">
+        </a>
+
+        <!-- Modal -->
+        <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">User Account</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                </div>
+                <div class="modal-body">
+                    <app-user-login></app-user-login>
+                    <app-user-registration></app-user-registration>
+                </div>
+                <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <!-- <button type="button" class="btn btn-primary">Save changes</button> -->
+                </div>
+            </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="dropdown" *ngIf="is_logged()">
+        <a href="" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <img src="assets/img/profile.svg" width="50" height="50" alt="" loading="lazy">
+            <div class="dropdown-menu" aria-labelledby="dropdownMenu2">
+                <button class="dropdown-item" type="button">Action</button>
+                <button class="dropdown-item" type="button">Another action</button>
+                <button class="dropdown-item" type="button">Something else here</button>
+            </div>
+        </a>
+    </div>
+    
 </nav>
 
-<app-user-login></app-user-login>
-<app-user-registration></app-user-registration>
 
-<router-outlet></router-outlet>
+<div class=".container-fluid">
+    <router-outlet></router-outlet>
+</div>
+
