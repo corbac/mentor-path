@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { RoadmapTrendingListComponent } from './roadmap-trending-list.component';
 
@@ -6,7 +6,7 @@ describe('RoadmapTrendingListComponent', () => {
   let component: RoadmapTrendingListComponent;
   let fixture: ComponentFixture<RoadmapTrendingListComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ RoadmapTrendingListComponent ]
     })

@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { RoadmapBuilderComponent } from './roadmap-builder.component';
 
@@ -6,7 +6,7 @@ describe('RoadmapBuilderComponent', () => {
   let component: RoadmapBuilderComponent;
   let fixture: ComponentFixture<RoadmapBuilderComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ RoadmapBuilderComponent ]
     })
