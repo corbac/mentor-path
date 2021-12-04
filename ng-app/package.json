@@ -22,7 +22,7 @@
     "@types/lodash": "^4.14.159",
     "bootstrap": "^4.5.3",
     "jquery": "^3.5.1",
-    "lodash": "^4.17.20",
+    "lodash": "^4.17.21",
     "popper.js": "^1.16.1",
     "rxjs": "~6.5.5",
     "snapsvg-cjs": "0.0.6",
