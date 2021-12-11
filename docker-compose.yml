@@ -1,0 +1,51 @@
+version: "3.9"
+
+networks:
+  mentor:
+
+services:
+  couchdb:
+    image: couchdb:3
+    environment:
+      - COUCHDB_USER=mp
+      - COUCHDB_PASSWORD=Leroro123
+    volumes:
+      - ./couchdb/data:/opt/couchdb/data
+    expose:
+      - 5984
+    ports:
+      - 5984:5984
+    networks:
+      - mentor
+  api:
+    image: node:latest
+    volumes:
+      - ./service:/opt/service
+    expose:
+      - 3000
+    ports:
+      - 3000:3000
+    command: >
+      bash -c "
+      cd /opt/service && npm install && node app.js"
+    networks:
+      - mentor
+    depends_on:
+      - couchdb
+  frontend:
+    image: node:14
+    volumes:
+      - ./ng-app:/opt/ng-app
+    expose:
+      - 4200
+    ports:
+      - 4200:4200
+    command: >
+      bash -c "ls /opt/ng-app && cd /opt/ng-app && npm install && npm run start"
+    depends_on:
+      - api
+    networks:
+      - mentor
+
+
+    
