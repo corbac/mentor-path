@@ -88,8 +88,9 @@ export class RoadmapBuilderComponent implements OnInit {
         var svg = document.getElementById('thesvg');
         var localpoint = context.getlocalmousecoord(svg, evt);
         // if (!mousedownonelement) {
-            console.log('invoked')
+            // console.log('invoked')
             context.createtext(localpoint, svg);
+            // context.openbar(localpoint, svg);
         // } else {
         //     mousedownonelement = false;
         // }

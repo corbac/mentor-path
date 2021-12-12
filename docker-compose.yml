@@ -11,8 +11,6 @@ services:
       - COUCHDB_PASSWORD=Leroro123
     volumes:
       - ./couchdb/data:/opt/couchdb/data
-    expose:
-      - 5984
     ports:
       - 5984:5984
     networks:
@@ -21,8 +19,6 @@ services:
     image: node:latest
     volumes:
       - ./service:/opt/service
-    expose:
-      - 3000
     ports:
       - 3000:3000
     command: >
@@ -36,8 +32,6 @@ services:
     image: node:14
     volumes:
       - ./ng-app:/opt/ng-app
-    expose:
-      - 4200
     ports:
       - 4200:4200
     command: >

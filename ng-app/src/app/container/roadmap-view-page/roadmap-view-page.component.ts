@@ -1,4 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { CastExpr } from '@angular/compiler';
+import { Component, Input, OnInit, Output, EventEmitter } from '@angular/core';
+import { Roadmap, Case } from '../../model/case'
 
 @Component({
   selector: 'app-roadmap-view-page',
@@ -8,6 +10,11 @@ import { Component, OnInit } from '@angular/core';
 export class RoadmapViewPageComponent implements OnInit {
 
   constructor() { }
+
+  @Input() curRoadmap : Roadmap;
+  @Output() caseChangeEvent = new EventEmitter<Roadmap>();
+  
+  curCase : Case;
 
   ngOnInit(): void {
   }
